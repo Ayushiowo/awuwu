@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Click Counter with Multipliers & Auto Clicker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #f4f7fb;
+      transition: background 0.5s;
+    }
+    .counter {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      font-size: 24px;
+      padding: 20px 40px;
+      border: none;
+      border-radius: 12px;
+      background-color: #0066ff;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.3s;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+      background-color: #0052cc;
+    }
+    .btn:active {
+      transform: scale(0.97);
+    }
+    .reset {
+      margin-top: 10px;
+      font-size: 16px;
+      padding: 10px 20px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+    }
+    .reset:hover {
+      background: #eee;
+    }
+    .store {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .store button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #22c55e;
+      color: white;
+      transition: 0.3s;
+    }
+    .store button:hover {
+      background-color: #16a34a;
+    }
+  </style>
+</head>
+<body>
+  <div class="counter" id="count">0</div>
+  <button id="clickBtn" class="btn">CLICK ME!</button>
+  <button id="resetBtn" class="reset">Reset</button>
+  <div class="store">
+    <h3>Store</h3>
+    <button id="mult2Btn">Buy 2x Multiplier (Cost: 100)</button>
+    <button id="mult10Btn">Buy 10x Multiplier (Cost: 1000)</button>
+    <button id="mult1MBtn">Buy 1,000,000x Multiplier (Cost: 1,000,000,000)</button>
+    <button id="autoClickerBtn">Buy Auto Clicker (Cost: 150)</button>
+  </div>
+
+  <script>
+    const countEl = document.getElementById('count');
+    const clickBtn = document.getElementById('clickBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const mult2Btn = document.getElementById('mult2Btn');
+    const mult10Btn = document.getElementById('mult10Btn');
+    const mult1MBtn = document.getElementById('mult1MBtn');
+    const autoClickerBtn = document.getElementById('autoClickerBtn');
+
+    let count = 0;
+    let multiplier = 1;
+    let autoClickers = 1;
+    let costs = {
+      mult2: 100,
+      mult10: 1000,
+      mult1M: 1000000000,
+      autoClicker: 150
+    };
+
+    function updateDisplay() {
+      countEl.textContent = count.toLocaleString();
+      document.body.style.background = `hsl(${(Math.floor(count / 10) * 40) % 360}, 80%, 90%)`;
+      mult2Btn.textContent = `Buy 2x Multiplier (Cost: ${costs.mult2.toLocaleString()})`;
+      mult10Btn.textContent = `Buy 10x Multiplier (Cost: ${costs.mult10.toLocaleString()})`;
+      mult1MBtn.textContent = `Buy 50x Multiplier (Cost: ${costs.mult1M.toLocaleString()})`;
+      autoClickerBtn.textContent = `Buy Auto Clicker (Cost: ${costs.autoClicker.toLocaleString()}) — Owned: ${autoClickers}`;
+    }
+
+    clickBtn.addEventListener('click', () => {
+      count += 1 * multiplier;
+      updateDisplay();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      count = 0;
+      multiplier = 1;
+      autoClickers = 1;
+      costs = { mult2: 100, mult10: 1000, mult1M: 1000000000, autoClicker: 150 };
+      updateDisplay();
+    });
+
+    mult2Btn.addEventListener('click', () => {
+      if (count >= costs.mult2) {
+        count -= costs.mult2;
+        multiplier *= 2;
+        costs.mult2 *= 3;
+        updateDisplay();
+      } else {
+        alert('Not enough clicks!');
+      }
+    });
+
+    mult10Btn.addEventListener('click', () => {
+      if (count >= costs.mult10) {
+        count -= costs.mult10;
+        multiplier *= 10;
+        costs.mult10 *= 30;
+        updateDisplay();
+      } else {
+        alert('Not enough clicks!');
+      }
+    });
+
+    mult1MBtn.addEventListener('click', () => {
+      if (count >= costs.mult1M) {
+        count -= costs.mult1M;
+        multiplier *= 50;
+        costs.mult1M *= 100;
+        updateDisplay();
+      } else {
+        alert('Not enough clicks!');
+      }
+    });
+
+    autoClickerBtn.addEventListener('click', () => {
+      if (count >= costs.autoClicker) {
+        count -= costs.autoClicker;
+        autoClickers += 1;
+        costs.autoClicker *= 3;
+        updateDisplay();
+      } else {
+        alert('Not enough clicks!');
+      }
+    });
+
+    // Auto clicker logic
+    setInterval(() => {
+      if (autoClickers > 0) {
+        count += autoClickers * multiplier;
+        updateDisplay();
+      }
+    }, 1000);
+
+    updateDisplay();
+  </script>
+</body>
+</html>
